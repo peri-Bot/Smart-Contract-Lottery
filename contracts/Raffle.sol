@@ -22,5 +22,9 @@ contract Raffle {
         }
     }
 
+    function getPlayers(uint256 index) public view returns (address){
+        return s_players[index];
+    }
+
     //function pickRandomWinner() {}
 }
