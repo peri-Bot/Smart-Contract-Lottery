@@ -16,10 +16,11 @@ contract Raffle {
         return i_enteranceFee;
     }
 
-    function enterRaffle() {
+    function enterRaffle() public payable{
         if (msg.value < i_enteranceFee) {
             revert Raffle_NotEnoughETHEntered();
         }
+        s_players.push(payable(msg.sender));
     }
 
     function getPlayers(uint256 index) public view returns (address){
