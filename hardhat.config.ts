@@ -7,10 +7,8 @@ import "dotenv/config"
 import "solidity-coverage"
 import "hardhat-deploy"
 import { HardhatUserConfig } from "hardhat/config"
-import "@nomicfoundation/hardhat-toolbox"
 
-const config: HardhatUserConfig = {
-  solidity: "0.8.18",
-};
-
-export default config
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+    solidity: "0.8.18",
+}
