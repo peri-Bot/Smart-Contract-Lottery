@@ -11,7 +11,14 @@ error Raffle_NotEnoughETHEntered();
 contract Raffle is VRFConsumerBaseV2 {
     /* State Variables*/
     uint256 private immutable i_enteranceFee;
+
+    // Lottery Variables
+    uint256 private immutable i_interval;
+    uint256 private s_lastTimeStamp;
+    address private s_recentWinner;
+    uint256 private immutable i_entranceFee;
     address payable[] private s_players;
+    RaffleState private s_raffleState;
 
     /* Events */
     event RaffleEnter(address indexed player);
@@ -31,6 +38,17 @@ contract Raffle is VRFConsumerBaseV2 {
 
         //Emit event when s_players is updated
         emit RaffleEnter(msg.sender);
+    }
+
+    function checkUpkeep(
+        bytes memory /* checkData */
+    ) public view override returns (bool upkeepNeeded, bytes memory /* performData */) {
+        bool isOpen = RaffleState.OPEN == s_raffleState;
+        bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+        bool hasPlayers = s_players.length > 0;
+        bool hasBalance = address(this).balance > 0;
+        upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
+        return (upkeepNeeded, "0x0"); // can we comment this out?
     }
 
     function requestRandomWinner() external {}
